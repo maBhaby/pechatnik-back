@@ -32,7 +32,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,7 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     
-    'landing_views'
+    # apps
+    'landing_views',
+
+    # libs
+    'rest_framework',
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -83,7 +87,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',   # Используется PostgreSQL
-        'NAME': 'pechatnik', # Имя базы данных
+        'NAME': os.getenv('DB_NAME'), # Имя базы данных
         'USER': os.getenv('DB_USER'), # Имя пользователя
         'PASSWORD': os.getenv('DB_PASSWORD'), # Пароль пользователя
         'HOST': os.getenv('DB_HOST'), # Наименование контейнера для базы данных в Docker Compose
@@ -132,3 +136,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# REST
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',  # Фильтрация
+        'rest_framework.filters.SearchFilter',                # Поиск
+        'rest_framework.filters.OrderingFilter',              # Сортировка
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',  # Пагинация
+    'PAGE_SIZE': 10,  # Размер страницы
+}

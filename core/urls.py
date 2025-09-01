@@ -21,5 +21,5 @@ from landing_views import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('landing_views.urls'))
+    path('api/v1/', include('landing_views.urls'))
 ]
