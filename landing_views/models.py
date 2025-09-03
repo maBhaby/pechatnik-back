@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -8,8 +9,6 @@ class VIEW_STATUS(Enum):
     
 
 class PriceView(models.Model):
-    __view_name='Блок Прайсов'
-
     isActive = models.BooleanField(default=False)
     title = models.TextField(max_length=256)
     description = models.TextField(max_length=512, blank=True, null=True)
@@ -19,13 +18,11 @@ class PriceView(models.Model):
         super().__init__(*args, **kwargs)
 
     def __str__(self):
-        return str(f'{self.title}: {self.__view_name}')
+        return str(f'{self.title}: {self.locator_field}')
     
 
 
 class ContactView(models.Model):
-    __view_name='Блок контактов'
-
     isActive = models.BooleanField(default=False)
     title = models.TextField(max_length=256)
     description = models.TextField(max_length=512, blank=True, null=True)
@@ -39,4 +36,22 @@ class ContactView(models.Model):
         super().__init__(*args, **kwargs)
 
     def __str__(self):
-        return str(f'{self.title}: {self.__view_name}')
+        return str(f'{self.title}: {self.locator_field}')
+
+class BrandingPrintView(models.Model):
+    isActive = models.BooleanField(default=False)
+    title = models.TextField(max_length=256)
+    description = models.TextField(max_length=512, blank=True, null=True)
+    advantages = ArrayField(
+        models.CharField(max_length=256, blank=True),
+        default=list,
+        blank=True,
+        null=True,
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.locator_field = 'BrandingPrintView'
+        super().__init__(*args, **kwargs)
+
+    def __str__(self):
+        return str(f'{self.title}: {self.locator_field}')

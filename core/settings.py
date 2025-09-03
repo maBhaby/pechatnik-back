@@ -25,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-korp%cbvozc_63u7@d!*o6fptrc8q=fqtc52wf$w==2jhp@w)d'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('IS_DEBUG') == "True"
 
 ALLOWED_HOSTS = ['*']
 
@@ -87,11 +87,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',   # Используется PostgreSQL
-        'NAME': os.getenv('DB_NAME'), # Имя базы данных
-        'USER': os.getenv('DB_USER'), # Имя пользователя
+        'NAME': os.getenv('DB_NAME', 'pechatnik'), # Имя базы данных
+        'USER': os.getenv('DB_USER', 'admin'), # Имя пользователя
         'PASSWORD': os.getenv('DB_PASSWORD'), # Пароль пользователя
-        'HOST': os.getenv('DB_HOST'), # Наименование контейнера для базы данных в Docker Compose
-        'PORT': os.getenv('DB_PORT'),  # Порт базы данных
+        'HOST': os.getenv('DB_HOST', '0.0.0.0'), # Наименование контейнера для базы данных в Docker Compose
+        'PORT': os.getenv('DB_PORT', 5432),  # Порт базы данных
     }
 }
 
@@ -131,6 +131,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -157,3 +161,9 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
 }
+
+# ONLY FOR PROD
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'HTTPS')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True

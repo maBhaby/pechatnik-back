@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PriceView, ContactView
+from .models import PriceView, ContactView, BrandingPrintView
 
 class PriceViewSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -26,6 +26,21 @@ class ContactViewSerializer(serializers.HyperlinkedModelSerializer):
           "email",
           "whats_app_link",
           "instagram_app_link"
+      ]
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["locator_field"] = "ContactsView"
+        return data
+
+class BrandingPrintViewSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+      model = BrandingPrintView
+      fields = [
+          "id",
+          "title",
+          "description",
+          "advantages",
       ]
     
     def to_representation(self, instance):
